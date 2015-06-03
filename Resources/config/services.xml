@@ -6,15 +6,26 @@
 
     <!--
     <parameters>
-        <parameter key="ev_copy.example.class">EV\CopyBundle\Example</parameter>
+        <parameter key="qwesteo_copy.example.class">Qwesteo\CopyBundle\Example</parameter>
     </parameters>
 
     <services>
-        <service id="ev_copy.example" class="%ev_copy.example.class%">
+        <service id="qwesteo_copy.example" class="%qwesteo_copy.example.class%">
             <argument type="service" id="service_id" />
             <argument>plain_value</argument>
             <argument>%parameter_name%</argument>
         </service>
     </services>
     -->
+
+    <services>
+        <service id="ev_copy.metadata.driver.annotation" class="EV\CopyBundle\Metadata\Driver\AnnotationDriver">
+            <argument type="service" id="annotation_reader" />
+        </service>
+
+        <service id="ev_copy.cloner" class="EV\CopyBundle\Cloner">
+            <argument type="service" id="ev_copy.metadata.driver.annotation" />
+        </service>
+    </services>
+
 </container>
