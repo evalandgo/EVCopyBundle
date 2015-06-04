@@ -3,90 +3,102 @@
 namespace EV\CopyBundle;
 
 use EV\CopyBundle\Metadata\Driver\DriverInterface;
+use EV\CopyBundle\Helper\AccessorHelper;
 
 class Cloner
 {
 
     protected $driver;
+    protected $accessorHelper;
+    protected $classMetadata;
 
-    public function __construct(DriverInterface $driver) {
+    protected $originalObject;
+    protected $params = array();
+    protected $copyObject;
+
+    public function __construct(DriverInterface $driver, AccessorHelper $accessorHelper) {
         $this->driver = $driver;
+        $this->accessorHelper = $accessorHelper;
     }
 
-    // TODO : refactor
-    public function copy($originalObject, $params = array()) {
+    public function getOriginalObject() {
+        return $this->originalObject;
+    }
 
-        // get metadata
-        $classMetadata = $this->driver->loadClassMetadata($originalObject);
-        //var_dump($classMetadata);
+    public function setOriginalObject($originalObject) {
+        $this->originalObject = $originalObject;
+        $this->classMetadata = $this->driver->loadClassMetadata($originalObject);
+    }
 
-        // création de la copie
-        if ( $classMetadata->getConstructMethodMetadata() !== null ) {
+    public function getParams() {
+        return $this->params;
+    }
+
+    public function setParams(array $params) {
+        $this->params = $params;
+    }
+
+    public function getClassMetadata() {
+        return $this->classMetadata;
+    }
+
+    public function copy() {
+
+        $this->createCopyObject();
+
+        $this->copyProperties();
+
+        return $this->copyObject;
+    }
+
+    protected function createCopyObject() {
+        if ( $this->classMetadata->getConstructMethodMetadata() !== null ) {
             $instanceArgs = array();
-            foreach($classMetadata->getConstructMethodMetadata()->getCopyOptions()['variables'] as $key => $param) {
-                if ( isset($params[$param]) ) {
-                    $instanceArgs[$param] = $params[$param];
+            foreach($this->classMetadata->getConstructMethodMetadata()->getCopyOptions()['variables'] as $key => $param) {
+                if ( isset($this->params[$param]) ) {
+                    $instanceArgs[$param] = $this->params[$param];
                 }
                 else {
                     throw new \Exception($param.' param is expected');
                 }
             }
 
-            $copyObject = $classMetadata->getReflectionClass()->newInstanceArgs($instanceArgs);
-        }
-        else {
-            $copyObject = $classMetadata->getReflectionClass()->newInstance();
+            return $this->classMetadata->getReflectionClass()->newInstanceArgs($instanceArgs);
         }
 
-        // parcours des metadata
-        foreach($classMetadata->getPropertiesMetadata() as $propertyMetadata) {
-            // copie
-            // TODO : vérifier si les méthodes existent
+        $this->copyObject = $this->classMetadata->getReflectionClass()->newInstance();
+    }
+
+    protected function copyProperties() {
+        foreach($this->classMetadata->getPropertiesMetadata() as $propertyMetadata) {
             if ( $propertyMetadata->getCopyType() === 'simple' ) {
-                $getterName = 'get'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
-                $setterName = 'set'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
-                $copyObject->$setterName($originalObject->$getterName());
+                $getterName = $this->accessorHelper->getGetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+                $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+                $this->copyObject->$setterName($this->originalObject->$getterName());
             }
             else if ( $propertyMetadata->getCopyType() === 'variable' ) {
-                $setterName = 'set'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
-                $copyObject->$setterName($params[$propertyMetadata->getCopyOptions()['name']]);
+                $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+                $this->copyObject->$setterName($this->params[$propertyMetadata->getCopyOptions()['name']]);
             }
             else if ( $propertyMetadata->getCopyType() === 'collection' ) {
-                $getterName = 'get'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
+                $adderName = $this->accessorHelper->getAdder($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
-                // TODO : refactor this shit
-                if ( $classMetadata->getReflectionClass()->hasMethod('add'.ucfirst(substr($propertyMetadata->getReflectionProperty()->getName(), 0, -1))) ) {
-                    $adderName = 'add'.ucfirst(substr($propertyMetadata->getReflectionProperty()->getName(), 0, -1));
-                }
-                else if ( $classMetadata->getReflectionClass()->hasMethod('add'.ucfirst($propertyMetadata->getReflectionProperty()->getName())) ) {
-                    $adderName = 'add'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
-                }
-                else {
-                    throw new \Exception('Adder not found for this property : '.$propertyMetadata->getReflectionProperty()->getName());
-                }
-
-                foreach($originalObject->$getterName() as $originalCollectionEntity) {
-                    $copyObject->$adderName($this->copy($originalCollectionEntity, $params));
+                foreach($this->originalObject->$getterName() as $originalCollectionEntity) {
+                    $this->copyObject->$adderName($this->copy($originalCollectionEntity, $this->params));
                 }
             }
             else if ( $propertyMetadata->getCopyType() === 'entity' ) {
-                $getterName = 'get'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
-                $setterName = 'set'.ucfirst($propertyMetadata->getReflectionProperty()->getName());
+                $getterName = $this->accessorHelper->getGetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+                $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
-                if ( $originalObject->$getterName() !== null ) {
-                    $copyObject->$setterName($this->copy($originalObject->$getterName(), $params));
+                if ( $this->originalObject->$getterName() !== null ) {
+                    $this->copyObject->$setterName($this->copy($this->originalObject->$getterName(), $params));
                 }
-
             }
             else {
                 throw new \Exception($propertyMetadata->getCopyType().' type is not expected');
             }
         }
-
-
-        return $copyObject;
     }
-
-
 
 }
