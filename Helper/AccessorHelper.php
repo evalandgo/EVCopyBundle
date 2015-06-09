@@ -20,7 +20,7 @@ class AccessorHelper {
 
     }
 
-    public function getSetter(ReflectionClass $reflectionClass, $propertyName) {
+    public function getSetter(\ReflectionClass $reflectionClass, $propertyName) {
 
         $setterName = 'set'.ucfirst($propertyName);
 
@@ -32,7 +32,7 @@ class AccessorHelper {
 
     }
 
-    public function getAdder(ReflectionClass $reflectionClass, $propertyName) {
+    public function getAdder(\ReflectionClass $reflectionClass, $propertyName) {
 
         if ( $reflectionClass->hasMethod('add'.ucfirst(substr($propertyName, 0, -1))) ) {
             return 'add'.ucfirst(substr($propertyName, 0, -1));

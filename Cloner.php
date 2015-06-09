@@ -16,6 +16,8 @@ class Cloner
     protected $params = array();
     protected $copyObject;
 
+    // TODO : ajouter une foctory
+
     public function __construct(DriverInterface $driver, AccessorHelper $accessorHelper) {
         $this->driver = $driver;
         $this->accessorHelper = $accessorHelper;
@@ -40,15 +42,6 @@ class Cloner
 
     public function getClassMetadata() {
         return $this->classMetadata;
-    }
-
-    public function copy() {
-
-        $this->createCopyObject();
-
-        $this->copyProperties();
-
-        return $this->copyObject;
     }
 
     protected function createCopyObject() {
@@ -99,6 +92,15 @@ class Cloner
                 throw new \Exception($propertyMetadata->getCopyType().' type is not expected');
             }
         }
+    }
+
+    public function copy() {
+
+        $this->createCopyObject();
+
+        $this->copyProperties();
+
+        return $this->copyObject;
     }
 
 }
