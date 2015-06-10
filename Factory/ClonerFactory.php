@@ -3,6 +3,7 @@
 namespace EV\CopyBundle\Factory;
 
 use EV\CopyBundle\Metadata\Driver\DriverInterface;
+use EV\CopyBundle\Cloner;
 
 class ClonerFactory
 {
