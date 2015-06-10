@@ -79,7 +79,8 @@ class Cloner
             }
             else if ( $propertyMetadata->getCopyType() === 'collection' ) {
                 $adderName = $this->accessorHelper->getAdder($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
-
+                $getterName = $this->accessorHelper->getGetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+                
                 foreach($this->originalObject->$getterName() as $originalCollectionEntity) {
                     $this->copyObject->$adderName($this->clonerFactory->copy($originalCollectionEntity, $this->params));
                 }
