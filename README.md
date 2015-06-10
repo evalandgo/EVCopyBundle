@@ -30,11 +30,11 @@ public function registerBundles()
 ## Entity configuration
 
 ### Annotations
-- @Copy\Simple : Prend la valeur tel quelle et l'ajout à la copie
-- @Copy\Variable(name="...") : définir la valeur en fonction des paramètres donnés au Cloner
-- @Copy\Entity : copie l'entités
-- @Copy\Collection : copie chaque entité de la collection
-- @Copy\Construct(variables={"..."}) : donne les bon paramètres au constructeur en fonction des paramètres donnés au Cloner
+- **@Copy\Simple** : Takes the value and adding to the copy
+- **@Copy\Variable**(name="...") : Set the value based on parameters given to Cloner
+- **@Copy\Entity** : Copy the entity
+- **@Copy\Collection** : Copy each entity of collection
+- **@Copy\Construct**(variables={"..."}) : Gives parameters to the constructor based on parameters given to Cloner
 
 ### Example
 
@@ -132,6 +132,8 @@ class Comment
      */
     $content;
 
+    // Getters, Setters and Adders methods...
+    
 }
 ```
 
