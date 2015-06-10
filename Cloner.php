@@ -8,19 +8,19 @@ use EV\CopyBundle\Helper\AccessorHelper;
 class Cloner
 {
 
-    protected $driver;
     protected $accessorHelper;
+    protected $driver;
     protected $classMetadata;
 
     protected $originalObject;
     protected $params = array();
     protected $copyObject;
 
-    // TODO : ajouter une foctory
+    // TODO : ajouter une factory
 
-    public function __construct(DriverInterface $driver, AccessorHelper $accessorHelper) {
+    public function __construct(DriverInterface $driver) {
+        $this->accessorHelper = new AccessorHelper;
         $this->driver = $driver;
-        $this->accessorHelper = $accessorHelper;
     }
 
     public function getOriginalObject() {
@@ -56,10 +56,12 @@ class Cloner
                 }
             }
 
-            return $this->classMetadata->getReflectionClass()->newInstanceArgs($instanceArgs);
+            $this->copyObject = $this->classMetadata->getReflectionClass()->newInstanceArgs($instanceArgs);
+            return true;
         }
 
         $this->copyObject = $this->classMetadata->getReflectionClass()->newInstance();
+        return true;
     }
 
     protected function copyProperties() {
@@ -85,7 +87,7 @@ class Cloner
                 $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
                 if ( $this->originalObject->$getterName() !== null ) {
-                    $this->copyObject->$setterName($this->copy($this->originalObject->$getterName(), $params));
+                    $this->copyObject->$setterName($this->copy($this->originalObject->$getterName(), $this->params));
                 }
             }
             else {

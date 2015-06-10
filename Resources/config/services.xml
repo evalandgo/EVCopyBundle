@@ -23,12 +23,11 @@
             <argument type="service" id="annotation_reader" />
         </service>
 
-        <service id="ev_copy.helper.accessor" class="EV\CopyBundle\Helper\AccessorHelper">
-        </service>
+        <!--<service id="ev_copy.helper.accessor" class="EV\CopyBundle\Helper\AccessorHelper">
+        </service>-->
 
         <service id="ev_copy.cloner" class="EV\CopyBundle\Cloner">
             <argument type="service" id="ev_copy.metadata.driver.annotation" />
-            <argument type="service" id="ev_copy.helper.accessor" />
         </service>
     </services>
 
