@@ -33,7 +33,7 @@ class Cloner
         return $this->classMetadata;
     }
 
-    public function setClonerFactory(ColnerFactory $clonerFactory) {
+    public function setClonerFactory(ClonerFactory $clonerFactory) {
         $this->clonerFactory = $clonerFactory;
     }
 
