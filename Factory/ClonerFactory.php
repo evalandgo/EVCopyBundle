@@ -25,7 +25,7 @@ class ClonerFactory
     }
 
     public function copy($originalObject, $params = array()) {
-        $this->createCloner($originalObject, $params)->copy();
+        return $this->createCloner($originalObject, $params)->copy();
     }
 
 }
