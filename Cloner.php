@@ -5,12 +5,14 @@ namespace EV\CopyBundle;
 use EV\CopyBundle\Helper\AccessorHelper;
 
 use EV\CopyBundle\Metadata\ClassMetadata;
+use EV\CopyBundle\Factory\ClonerFactory;
 
 class Cloner
 {
 
     protected $accessorHelper;
     protected $classMetadata;
+    protected $clonerFactory;
 
     protected $originalObject;
     protected $params = array();
@@ -29,6 +31,10 @@ class Cloner
 
     public function getClassMetadata() {
         return $this->classMetadata;
+    }
+
+    public function setClonerFactory(ColnerFactory $clonerFactory) {
+        $this->clonerFactory = $clonerFactory;
     }
 
     public function getParams() {
@@ -75,7 +81,7 @@ class Cloner
                 $adderName = $this->accessorHelper->getAdder($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
                 foreach($this->originalObject->$getterName() as $originalCollectionEntity) {
-                    $this->copyObject->$adderName($this->copy($originalCollectionEntity, $this->params));
+                    $this->copyObject->$adderName($this->clonerFactory->copy($originalCollectionEntity, $this->params));
                 }
             }
             else if ( $propertyMetadata->getCopyType() === 'entity' ) {
@@ -83,7 +89,7 @@ class Cloner
                 $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
                 if ( $this->originalObject->$getterName() !== null ) {
-                    $this->copyObject->$setterName($this->copy($this->originalObject->$getterName(), $this->params));
+                    $this->copyObject->$setterName($this->clonerFactory->copy($this->originalObject->$getterName(), $this->params));
                 }
             }
             else {
