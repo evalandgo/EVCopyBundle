@@ -26,9 +26,12 @@
         <!--<service id="ev_copy.helper.accessor" class="EV\CopyBundle\Helper\AccessorHelper">
         </service>-->
 
-        <service id="ev_copy.cloner" class="EV\CopyBundle\Cloner">
+        <service id="ev_copy.factory.cloner" class="EV\CopyBundle\Factory\ClonerFactory">
             <argument type="service" id="ev_copy.metadata.driver.annotation" />
         </service>
+
+        <!--<service id="ev_copy.cloner" class="EV\CopyBundle\Cloner">
+        </service>-->
     </services>
 
 </container>

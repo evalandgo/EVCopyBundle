@@ -2,34 +2,33 @@
 
 namespace EV\CopyBundle;
 
-use EV\CopyBundle\Metadata\Driver\DriverInterface;
 use EV\CopyBundle\Helper\AccessorHelper;
+
+use EV\CopyBundle\Metadata\ClassMetadata;
 
 class Cloner
 {
 
     protected $accessorHelper;
-    protected $driver;
     protected $classMetadata;
 
     protected $originalObject;
     protected $params = array();
     protected $copyObject;
 
-    // TODO : ajouter une factory
+    public function __construct($originalObject, ClassMetadata $classMetadata) {
+        $this->accessorHelper = new AccessorHelper();
 
-    public function __construct(DriverInterface $driver) {
-        $this->accessorHelper = new AccessorHelper;
-        $this->driver = $driver;
+        $this->originalObject = $originalObject;
+        $this->classMetadata = $classMetadata;
     }
 
     public function getOriginalObject() {
         return $this->originalObject;
     }
 
-    public function setOriginalObject($originalObject) {
-        $this->originalObject = $originalObject;
-        $this->classMetadata = $this->driver->loadClassMetadata($originalObject);
+    public function getClassMetadata() {
+        return $this->classMetadata;
     }
 
     public function getParams() {
@@ -40,9 +39,6 @@ class Cloner
         $this->params = $params;
     }
 
-    public function getClassMetadata() {
-        return $this->classMetadata;
-    }
 
     protected function createCopyObject() {
         if ( $this->classMetadata->getConstructMethodMetadata() !== null ) {
