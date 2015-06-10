@@ -24,5 +24,7 @@ class EVCopyExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $container->setAlias('ev_copy.metadata.driver', 'ev_copy.metadata.driver.annotation');
     }
 }
