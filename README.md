@@ -108,6 +108,16 @@ class Article
 
     // Getters, Setters and Adders methods...
 
+    public function addComment(\EV\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        // IMPORTANT : without this line, the copy won't work
+        $comment->setArticle($this);
+
+        return $this;
+    }
+
 }
 ```
 
@@ -132,8 +142,14 @@ class Comment
      */
     $content;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="EV\BlogBundle\Entity\Article", inversedBy="comments")
+     * @ORM\JoinColumn(name="articleId", referencedColumnName="id", nullable=false)
+     */
+    protected $article;
+
     // Getters, Setters and Adders methods...
-    
+
 }
 ```
 
