@@ -16,7 +16,7 @@ class ClonerFactory
 
     public function createCloner($originalObject, $params = array()) {
 
-        $classMetadata = $this->driver->loadClassMetadata($originalObject);
+        $classMetadata = $this->driver->loadMetadataFromObject($originalObject);
         $cloner = new Cloner($originalObject, $classMetadata);
         $cloner->setParams($params);
         $cloner->setClonerFactory($this);

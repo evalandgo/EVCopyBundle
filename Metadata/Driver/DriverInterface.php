@@ -4,5 +4,5 @@ namespace EV\CopyBundle\Metadata\Driver;
 
 interface DriverInterface
 {
-    public function loadClassMetadata($object);
+    public function loadMetadataFromObject($object);
 }
