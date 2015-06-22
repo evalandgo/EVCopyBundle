@@ -1,3 +1,5 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92/small.png)](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92)
+
 # EVCopyBundle
 This is a Symfony2 Bundle helps you to copy an entity with its dependencies
 
