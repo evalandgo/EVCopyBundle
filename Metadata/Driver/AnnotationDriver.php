@@ -3,7 +3,6 @@
 namespace EV\CopyBundle\Metadata\Driver;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\DBAL\Driver;
 use EV\CopyBundle\Metadata\ClassMetadata;
 use EV\CopyBundle\Metadata\PropertyMetadata;
 use EV\CopyBundle\Metadata\MethodMetadata;
