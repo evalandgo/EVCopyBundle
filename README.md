@@ -1,6 +1,4 @@
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92/small.png)](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92)
-
-# EVCopyBundle
+# EVCopyBundle  [![SensioLabsInsight](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92/small.png)](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92)
 This is a Symfony2 Bundle helps you to copy an entity with its dependencies
 
 ## Features
@@ -9,6 +7,7 @@ This is a Symfony2 Bundle helps you to copy an entity with its dependencies
 ## Installation
 
 In composer.json file, add :
+
 ```json
 {
     "require": {
@@ -18,6 +17,7 @@ In composer.json file, add :
 ```
 
 In app/AppKernel.php file, add :
+
 ```php
 public function registerBundles()
 {
@@ -33,10 +33,33 @@ public function registerBundles()
 
 ### Annotations
 - **@Copy\Simple** : Takes the value and adding to the copy
-- **@Copy\Variable**(name="...") : Set the value based on parameters given to Cloner
-- **@Copy\Entity** : Copy the entity
+
+- **@Copy\Variable** : Set the value based on parameters given to Cloner
+
+    Required attributes:
+    
+    - **name**
+
 - **@Copy\Collection** : Copy each entity of collection
-- **@Copy\Construct**(variables={"..."}) : Gives parameters to the constructor based on parameters given to Cloner
+
+    Optional attributes:
+    
+    - **memorizeMatching** : Enable the matching memory and define a name of the memory bag    
+    
+- **@Copy\Entity** : Copy the entity
+
+- **@Copy\UseMatching** : Takes an entity copied previously. It uses the matching memory system
+
+    Required attributes:
+    
+    - **name** : Name of the memory bag
+
+- **@Copy\Construct** : Gives parameters to the constructor based on parameters given to Cloner
+
+    Required attributes:
+    
+    - **variables** : Array of parameters
+
 
 ### Example
 
@@ -174,6 +197,10 @@ public function articleCopyAction() {
 
 }
 ```
+
+## Future features
+- Add an annotation in order to condition the copy of a parameter
+- Define an order to copy parameters
 
 ## How to contribute
 To contribute just open a Pull Request with your new code taking into account that if you add new features or modify existing ones you have to document in this README what they do.

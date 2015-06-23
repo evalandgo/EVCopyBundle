@@ -6,6 +6,7 @@ use EV\CopyBundle\Helper\AccessorHelper;
 
 use EV\CopyBundle\Metadata\ClassMetadata;
 use EV\CopyBundle\Factory\ClonerFactory;
+use EV\CopyBundle\Memory\MatchingMemory;
 
 class Cloner
 {
@@ -17,6 +18,8 @@ class Cloner
     protected $originalObject;
     protected $params = array();
     protected $copyObject;
+
+    protected $matchingMemory;
 
     public function __construct($originalObject, ClassMetadata $classMetadata) {
         $this->accessorHelper = new AccessorHelper();
@@ -35,6 +38,10 @@ class Cloner
 
     public function setClonerFactory(ClonerFactory $clonerFactory) {
         $this->clonerFactory = $clonerFactory;
+    }
+
+    public function setMatchingMemory(MatchingMemory $matchingMemory) {
+        $this->matchingMemory = $matchingMemory;
     }
 
     public function getParams() {
@@ -82,7 +89,13 @@ class Cloner
                 $getterName = $this->accessorHelper->getGetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
                 foreach($this->originalObject->$getterName() as $originalCollectionEntity) {
-                    $this->copyObject->$adderName($this->clonerFactory->copy($originalCollectionEntity, $this->params));
+                    $copyCollectionEntity = $this->clonerFactory->recursiveCopy($originalCollectionEntity, $this->params);
+
+                    $this->copyObject->$adderName($copyCollectionEntity);
+
+                    if ( isset($propertyMetadata->getCopyOptions()['memorizeMatching']) ) {
+                        $this->matchingMemory->addMatching($propertyMetadata->getCopyOptions()['memorizeMatching'], $originalCollectionEntity, $copyCollectionEntity);
+                    }
                 }
             }
             else if ( $propertyMetadata->getCopyType() === 'entity' ) {
@@ -90,7 +103,16 @@ class Cloner
                 $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
 
                 if ( $this->originalObject->$getterName() !== null ) {
-                    $this->copyObject->$setterName($this->clonerFactory->copy($this->originalObject->$getterName(), $this->params));
+                    $this->copyObject->$setterName($this->clonerFactory->recursiveCopy($this->originalObject->$getterName(), $this->params));
+                }
+            }
+            else if ( $propertyMetadata->getCopyType() === 'use_matching' ) {
+                $getterName = $this->accessorHelper->getGetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+                $setterName = $this->accessorHelper->getSetter($this->classMetadata->getReflectionClass(), $propertyMetadata->getReflectionProperty()->getName());
+
+                if ( $this->originalObject->$getterName() !== null ) {
+                    $copyEntity = $this->matchingMemory->getMatchingCopy($propertyMetadata->getCopyOptions()['name'], $this->originalObject->$getterName());
+                    $this->copyObject->$setterName($copyEntity);
                 }
             }
             else {

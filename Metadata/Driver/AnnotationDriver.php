@@ -14,7 +14,9 @@ class AnnotationDriver implements DriverInterface {
         'EV\CopyBundle\Annotation\Simple',
         'EV\CopyBundle\Annotation\Variable',
         'EV\CopyBundle\Annotation\Collection',
-        'EV\CopyBundle\Annotation\Entity'
+        'EV\CopyBundle\Annotation\Entity',
+        'EV\CopyBundle\Annotation\MemorizeMatching',
+        'EV\CopyBundle\Annotation\UseMatching'
     );
 
     public function __construct(Reader $reader) {

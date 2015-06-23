@@ -4,34 +4,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
-    <parameters>
-        <parameter key="qwesteo_copy.example.class">Qwesteo\CopyBundle\Example</parameter>
-    </parameters>
-
-    <services>
-        <service id="qwesteo_copy.example" class="%qwesteo_copy.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
-        </service>
-    </services>
-    -->
-
     <services>
         <service id="ev_copy.metadata.driver.annotation" class="EV\CopyBundle\Metadata\Driver\AnnotationDriver">
             <argument type="service" id="annotation_reader" />
         </service>
 
-        <!--<service id="ev_copy.helper.accessor" class="EV\CopyBundle\Helper\AccessorHelper">
-        </service>-->
+        <service id="ev_copy.memory.matching" class="EV\CopyBundle\Memory\MatchingMemory">
+        </service>
 
         <service id="ev_copy.factory.cloner" class="EV\CopyBundle\Factory\ClonerFactory">
             <argument type="service" id="ev_copy.metadata.driver" />
+            <argument type="service" id="ev_copy.memory.matching" />
         </service>
 
-        <!--<service id="ev_copy.cloner" class="EV\CopyBundle\Cloner">
-        </service>-->
     </services>
 
 </container>
