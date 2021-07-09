@@ -1,31 +1,36 @@
 {
-    "name": "ev/ev-copy-bundle",
-    "type": "symfony-bundle",
-    "description": "This is a Symfony2 Bundle helps you to copy an entity",
-    "keywords": ["copy", "clone", "cloner", "doctrine", "entity", "entities", "bundle"],
-    "homepage": "http://github.com/evalandgo/EVCopyBundle",
-    "license": "MIT",
-    
-    "authors": [
-        {
-            "name": "Evalandgo Team",
-            "homepage": "http://evalandgo.com"
-        }
-    ],
-            
-    "require": {
-        "php":                          ">=5.4.0"
-    },
-
-    "autoload": {
-        "psr-4": {
-            "EV\\CopyBundle\\": ""
-        }
-    },
-    
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
+  "name": "ev/ev-copy-bundle",
+  "type": "symfony-bundle",
+  "description": "This is a Symfony Bundle helps you to copy an entity",
+  "keywords": [
+    "copy",
+    "clone",
+    "cloner",
+    "doctrine",
+    "entity",
+    "entities",
+    "bundle"
+  ],
+  "homepage": "http://github.com/evalandgo/EVCopyBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Evalandgo Team",
+      "homepage": "http://evalandgo.com"
     }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "symfony/framework-bundle": "^4.4|^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "EV\\CopyBundle\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
 }
