@@ -1,5 +1,5 @@
-# EVCopyBundle  [![SensioLabsInsight](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92/small.png)](https://insight.sensiolabs.com/projects/3cdb421a-13d0-4c06-8c6b-f01235cf7c92)
-This is a Symfony2 Bundle helps you to copy an entity with its dependencies
+# EVCopyBundle
+This is a Symfony Bundle helps you to copy an entity with its dependencies
 
 ## Features
 - Easily configure the copying behavior of entities
@@ -11,7 +11,7 @@ In composer.json file, add :
 ```json
 {
     "require": {
-        "ev/ev-copy-bundle": "dev-master"
+        "ev/ev-copy-bundle": "^1.2"
     }
 }
 ```
