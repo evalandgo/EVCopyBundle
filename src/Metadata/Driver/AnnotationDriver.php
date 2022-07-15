@@ -3,6 +3,7 @@
 namespace EV\CopyBundle\Metadata\Driver;
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Persistence\Proxy;
 use EV\CopyBundle\Metadata\ClassMetadata;
 use EV\CopyBundle\Metadata\PropertyMetadata;
 use EV\CopyBundle\Metadata\MethodMetadata;
@@ -24,7 +25,7 @@ class AnnotationDriver implements DriverInterface {
     }
 
     public function loadMetadataFromObject($object) {
-        if ( $object instanceof \Doctrine\Common\Persistence\Proxy ) {
+        if ($object instanceof Proxy) {
             return $this->loadMetadata(get_parent_class($object));
         }
 
